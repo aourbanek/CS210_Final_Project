@@ -8,9 +8,17 @@ struct City
 {
     string countryCode;
     string countryName;
-    double population;
+    string population;
     int cacheNum;
-    City(string val1, string val2, double val3, int val4) : countryCode(val1), countryName(val2), population(val3), cacheNum(val4) {}
+    City(string val1, string val2, string val3, int val4) : countryCode(val1), countryName(val2), population(val3), cacheNum(val4) {}
+
+    void displayPrivate() const
+    {
+        cout << countryCode << endl;
+        cout << countryName << endl;
+        cout << population << endl;
+        cout << cacheNum << endl;
+    }
 };
 
 class CityHashTable
@@ -29,6 +37,8 @@ private:
     }
 
 public:
+    int itemCount = 0;
+
     CityHashTable(int size = 10) : size(size)
     {
         table.resize(size);
@@ -39,6 +49,11 @@ public:
         int key = hashFunction(city.countryCode + city.countryName, size);
 
         table[key].push_back(city);
+
+        itemCount++;
+
+        cout << "Item successfully added to hash table" << endl;
+
         return;
     }
 
@@ -60,24 +75,42 @@ public:
     //    return;
     //}
 
-    void find(const string& code, const string& name)
+    bool find(const string& code, const string& name)
     {
         int key = hashFunction(code + name, size);
         for (City& city : table[key])
         {
             if (city.countryCode == code && city.countryName == name)
             {
-
-                cout << "City found!" << endl;
+                cout << "City found in cache!" << endl;
                 cout << "Country code: " << city.countryCode << endl;
                 cout << "City Name   : " << city.countryName << endl;
                 cout << "Population  : " << city.population << endl;
+                cout << "DEBUG Num   : " << city.cacheNum << endl;
 
-                return;
+                return true;
             }
         }
 
         cout << "City " << name << " not found in hash table." << endl;
+        return false;
+    }
+
+    void display() const
+    {
+        cout << "Displaying all cities:" << endl;
+        for (int i = 0; i < size; ++i)
+        {
+            if (!table[i].empty())
+            {
+                cout << "Bucket " << i << ": " << endl;
+                for (const City& city : table[i])
+                {
+                    city.displayPrivate();
+                }
+            }
+        }
+
         return;
     }
 };
@@ -114,6 +147,8 @@ void interface(char choice)
     string searchCity = "";
     CSVReader fileReading;
 
+    CityHashTable hashTable(10); // 10 buckets
+
     if (choice == 'y')
     {
         cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
@@ -122,23 +157,33 @@ void interface(char choice)
         cout << "Enter a city name (lowercase):" << endl;
         std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
 
-        bool found = false;
-        for (vector<string> item : fileReading.readCSV("world_cities.csv"))
+        bool foundInCache = false;
+        foundInCache = hashTable.find(searchCountry, searchCity);
+
+        if (!foundInCache)
         {
-            if (item[0] == searchCountry && item[1] == searchCity)
+            bool foundInFile = false;
+            for (vector<string> item : fileReading.readCSV("world_cities.csv"))
             {
-                found = true;
-                cout << "City found!" << endl;
-                cout << "Country code: " << item[0] << endl;
-                cout << "City Name   : " << item[1] << endl;
-                cout << "Population  : " << item[2] << endl;
-                break;
+                if (item[0] == searchCountry && item[1] == searchCity)
+                {
+                    foundInFile = true;
+                    cout << "City found in database!" << endl;
+                    cout << "Country code: " << item[0] << endl;
+                    cout << "City Name   : " << item[1] << endl;
+                    cout << "Population  : " << item[2] << endl;
+
+                    hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
+                    break;
+                }
+            }
+            if (!foundInFile)
+            {
+                cout << "City not found." << endl;
             }
         }
-        if (!found)
-        {
-            cout << "City not found." << endl;
-        }
+        
+        hashTable.display();
 
         cout << "Would you like to do more? (y/n)" << endl;
         cin >> doMore;
