@@ -60,20 +60,22 @@ public:
 
     void deleteOldest()
     {
-        for (vector<City> bucket : table)
+        for (vector<City>& bucket : table)
         {
-            for (City city : bucket)
+            for (City& city : bucket)
             {
                 city.id--;
             }
         }
-        for (vector<City> bucket : table)
+        for (vector<City>& bucket : table)
         {
             for (auto it = bucket.begin(); it != bucket.end(); ++it)
             {
                 if (it->id == 0)
                 {
                     bucket.erase(it);
+                    cout << "Oldest item in cache deleted." << endl;
+                    break;
                 }
             }
         }
@@ -187,11 +189,13 @@ int main()
 
                     if (hashTable.itemCount == 10)
                     {
-                        cout << "Cache full! Deleting oldest...";
+                        cout << "Cache full! Deleting oldest..." << endl;
                         hashTable.deleteOldest();
                     }
 
                     hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
+
+
                     break;
                 }
             }
