@@ -9,15 +9,13 @@ struct City
     string countryCode;
     string countryName;
     string population;
-    int cacheNum;
-    City(string val1, string val2, string val3, int val4) : countryCode(val1), countryName(val2), population(val3), cacheNum(val4) {}
+    City(string val1, string val2, string val3) : countryCode(val1), countryName(val2), population(val3) {}
 
     void displayPrivate() const
     {
         cout << countryCode << endl;
         cout << countryName << endl;
         cout << population << endl;
-        cout << cacheNum << endl;
     }
 };
 
@@ -37,20 +35,17 @@ private:
     }
 
 public:
-    int itemCount = 0;
 
     CityHashTable(int size = 10) : size(size)
     {
         table.resize(size);
     }
 
-    void insert(const City& city)
+    void insert(City city)
     {
         int key = hashFunction(city.countryCode + city.countryName, size);
 
         table[key].push_back(city);
-
-        itemCount++;
 
         cout << "Item successfully added to hash table" << endl;
 
@@ -78,7 +73,7 @@ public:
     bool find(const string& code, const string& name)
     {
         int key = hashFunction(code + name, size);
-        for (City& city : table[key])
+        for (City city : table[key])
         {
             if (city.countryCode == code && city.countryName == name)
             {
@@ -86,7 +81,6 @@ public:
                 cout << "Country code: " << city.countryCode << endl;
                 cout << "City Name   : " << city.countryName << endl;
                 cout << "Population  : " << city.population << endl;
-                cout << "DEBUG Num   : " << city.cacheNum << endl;
 
                 return true;
             }
@@ -175,7 +169,7 @@ int main()
                     cout << "City Name   : " << item[1] << endl;
                     cout << "Population  : " << item[2] << endl;
 
-                    hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
+                    hashTable.insert(City(item[0], item[1], item[2]));
                     break;
                 }
             }
