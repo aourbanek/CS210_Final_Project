@@ -4,6 +4,84 @@
 #include <vector>
 using namespace std;
 
+struct City
+{
+    string countryCode;
+    string countryName;
+    double population;
+    int cacheNum;
+    City(string val1, string val2, double val3, int val4) : countryCode(val1), countryName(val2), population(val3), cacheNum(val4) {}
+};
+
+class CityHashTable
+{
+private:
+    // Hash Table initialization
+    vector<vector<City>> table;
+    int size;
+
+    int hashFunction(string key, int tableSize) {
+        int hash = 0;
+        for (char ch : key) {
+            hash += ch;
+        }
+        return hash % tableSize;
+    }
+
+public:
+    CityHashTable(int size = 10) : size(size)
+    {
+        table.resize(size);
+    }
+
+    void insert(const City& city)
+    {
+        int key = hashFunction(city.countryCode + city.countryName, size);
+
+        table[key].push_back(city);
+        return;
+    }
+
+    //void deleteByName(const string& name)
+    //{
+    //    int key = hashFunction(name, size);
+    //    auto& bucket = table[key];
+
+    //    for (auto it = bucket.begin(); it != bucket.end(); ++it)
+    //    {
+    //        if (it->name == name)
+    //        {
+    //            bucket.erase(it);
+    //            return;
+    //        }
+    //    }
+
+    //    cout << "City " << name << " not found in hash table." << endl;
+    //    return;
+    //}
+
+    void find(const string& code, const string& name)
+    {
+        int key = hashFunction(code + name, size);
+        for (City& city : table[key])
+        {
+            if (city.countryCode == code && city.countryName == name)
+            {
+
+                cout << "City found!" << endl;
+                cout << "Country code: " << city.countryCode << endl;
+                cout << "City Name   : " << city.countryName << endl;
+                cout << "Population  : " << city.population << endl;
+
+                return;
+            }
+        }
+
+        cout << "City " << name << " not found in hash table." << endl;
+        return;
+    }
+};
+
 class CSVReader {
 public:
     static vector<vector<string>> readCSV(const string& filename) {
