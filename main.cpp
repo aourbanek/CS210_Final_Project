@@ -7,14 +7,14 @@ using namespace std;
 struct City
 {
     string countryCode;
-    string countryName;
+    string cityName;
     string population;
-    City(string val1, string val2, string val3) : countryCode(val1), countryName(val2), population(val3) {}
+    City(string val1, string val2, string val3) : countryCode(val1), cityName(val2), population(val3) {}
 
     void displayPrivate() const
     {
         cout << countryCode << endl;
-        cout << countryName << endl;
+        cout << cityName << endl;
         cout << population << endl;
     }
 };
@@ -43,7 +43,7 @@ public:
 
     void insert(City city)
     {
-        int key = hashFunction(city.countryCode + city.countryName, size);
+        int key = hashFunction(city.countryCode + city.cityName, size);
 
         table[key].push_back(city);
 
@@ -55,12 +55,12 @@ public:
 
     //void deleteByName(const string& name)
     //{
-    //    int key = hashFunction(name, size);
+    //    int key = hashFunction(city.countryCode + city.cityName, size);
     //    auto& bucket = table[key];
 
     //    for (auto it = bucket.begin(); it != bucket.end(); ++it)
     //    {
-    //        if (it->name == name)
+    //        if (it->cityName == cityName)
     //        {
     //            bucket.erase(it);
     //            return;
@@ -76,11 +76,11 @@ public:
         int key = hashFunction(code + name, size);
         for (City city : table[key])
         {
-            if (city.countryCode == code && city.countryName == name)
+            if (city.countryCode == code && city.cityName == name)
             {
                 cout << "City found in cache!" << endl;
                 cout << "Country code: " << city.countryCode << endl;
-                cout << "City Name   : " << city.countryName << endl;
+                cout << "City Name   : " << city.cityName << endl;
                 cout << "Population  : " << city.population << endl;
 
                 return true;
