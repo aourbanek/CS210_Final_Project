@@ -48,6 +48,7 @@ public:
         table[key].push_back(city);
 
         cout << "Item successfully added to hash table" << endl;
+        cout << endl;
 
         return;
     }
@@ -87,6 +88,7 @@ public:
         }
 
         cout << "City " << name << " not found in hash table." << endl;
+        cout << endl;
         return false;
     }
 
@@ -103,6 +105,8 @@ public:
                     city.displayPrivate();
                 }
             }
+
+            cout << endl;
         }
 
         return;
@@ -118,6 +122,7 @@ public:
 
         if (!file.is_open()) {
             cerr << "Error: Could not open file " << filename << endl;
+            cout << endl;
             return data;
         }
 
@@ -152,6 +157,7 @@ int main()
         cin >> searchCountry;
         cout << "Enter a city name (lowercase):" << endl;
         std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
+        cout << endl;
 
         bool foundInCache = false;
         foundInCache = hashTable.find(searchCountry, searchCity);
@@ -168,6 +174,7 @@ int main()
                     cout << "Country code: " << item[0] << endl;
                     cout << "City Name   : " << item[1] << endl;
                     cout << "Population  : " << item[2] << endl;
+                    cout << endl;
 
                     hashTable.insert(City(item[0], item[1], item[2]));
                     break;
