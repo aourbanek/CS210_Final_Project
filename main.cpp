@@ -29,16 +29,14 @@ public:
     }
 };
 
-void interface(int choice)
+void interface(char choice)
 {
-    int input = -1;
     char doMore = ' ';
     string searchCountry = "";
     string searchCity = "";
 
-    switch (choice)
+    if (choice == 'y')
     {
-    case 1:
         cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
         cout << "Enter a country code (lowercase):" << endl;
         cin >> searchCountry;
@@ -47,26 +45,18 @@ void interface(int choice)
 
         cout << "Would you like to do more? (y/n)" << endl;
         cin >> doMore;
-        switch (doMore)
-        {
-        case 'y':
-            interface(1);
-            break;
-        case 'n':
-            interface(0);
-            break;
-        }
-        break;
-    case 2: // Quit
+        interface(doMore);
+    }
+    if (choice == 'n')
+    {
         cout << "Ok. Goodbye!";
         return;
-        break;
     }
 }
 
 int main()
 {
-    interface(1);
+    interface('y');
 
 
     CSVReader fileReading;
