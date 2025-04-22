@@ -34,6 +34,7 @@ void interface(char choice)
     char doMore = ' ';
     string searchCountry = "";
     string searchCity = "";
+    CSVReader fileReading;
 
     if (choice == 'y')
     {
@@ -41,7 +42,25 @@ void interface(char choice)
         cout << "Enter a country code (lowercase):" << endl;
         cin >> searchCountry;
         cout << "Enter a city name (lowercase):" << endl;
-        cin >> searchCity;
+        std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
+
+        bool found = false;
+        for (vector<string> item : fileReading.readCSV("world_cities.csv"))
+        {
+            if (item[0] == searchCountry && item[1] == searchCity)
+            {
+                found = true;
+                cout << "City found!" << endl;
+                cout << "Country code: " << item[0] << endl;
+                cout << "City Name   : " << item[1] << endl;
+                cout << "Population  : " << item[2] << endl;
+                break;
+            }
+        }
+        if (!found)
+        {
+            cout << "City not found." << endl;
+        }
 
         cout << "Would you like to do more? (y/n)" << endl;
         cin >> doMore;
@@ -57,9 +76,4 @@ void interface(char choice)
 int main()
 {
     interface('y');
-
-
-    CSVReader fileReading;
-    string filename = "world_cities.csv";
-    vector<vector<string>> data = fileReading.readCSV("world_cities.csv");
 }
