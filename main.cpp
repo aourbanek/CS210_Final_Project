@@ -140,8 +140,10 @@ public:
     }
 };
 
-void interface(char choice)
+int main()
 {
+    bool running = true;
+    char keepRunning = 'y';
     char doMore = ' ';
     string searchCountry = "";
     string searchCity = "";
@@ -149,7 +151,7 @@ void interface(char choice)
 
     CityHashTable hashTable(10); // 10 buckets
 
-    if (choice == 'y')
+    while (running)
     {
         cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
         cout << "Enter a country code (lowercase):" << endl;
@@ -182,21 +184,17 @@ void interface(char choice)
                 cout << "City not found." << endl;
             }
         }
-        
+
         hashTable.display();
 
         cout << "Would you like to do more? (y/n)" << endl;
-        cin >> doMore;
-        interface(doMore);
+        cin >> keepRunning;
+        if (keepRunning == 'n')
+        {
+            cout << "Ok. Goodbye!";
+            running = false;
+        }
     }
-    if (choice == 'n')
-    {
-        cout << "Ok. Goodbye!";
-        return;
-    }
-}
 
-int main()
-{
-    interface('y');
+    return 0;
 }
