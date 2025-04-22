@@ -9,16 +9,8 @@ struct City
     string countryCode;
     string cityName;
     string population;
-    int id;
+    int id; // Used for "age" in cache
     City(string val1, string val2, string val3, int val4) : countryCode(val1), cityName(val2), population(val3), id(val4) {}
-
-    void displayPrivate() const
-    {
-        cout << countryCode << endl;
-        cout << cityName << endl;
-        cout << population << endl;
-        cout << id << endl;
-    }
 };
 
 class CityHashTable
@@ -38,6 +30,8 @@ private:
 
 public:
     int itemCount = 0;
+    // Original Hash Table implementation can return its size (# of buckets),
+    // but not the actual number of items across all buckets
 
     CityHashTable(int size = 10) : size(size)
     {
@@ -52,7 +46,7 @@ public:
 
         itemCount++;
 
-        cout << "Item successfully added to hash table" << endl;
+        cout << "City added to search cache." << endl;
         cout << endl;
 
         return;
@@ -60,6 +54,7 @@ public:
 
     void deleteOldest()
     {
+        // First reduces every City's id/"index" to maintain the <= 10 limit
         for (vector<City>& bucket : table)
         {
             for (City& city : bucket)
@@ -67,6 +62,7 @@ public:
                 city.id--;
             }
         }
+        // Then oldest City (originally id 1, now 0 from above loop) is actually deleted
         for (vector<City>& bucket : table)
         {
             for (auto it = bucket.begin(); it != bucket.end(); ++it)
@@ -79,12 +75,15 @@ public:
                 }
             }
         }
-        itemCount--;
+        itemCount--; // Must be decremented manually for same reason itemCount was initialized
         return;
     }
 
+    // Returns a bool so whether or not the database needs to
+    // be searched can be determined directly from this search
     bool find(const string& code, const string& name)
     {
+        cout << "Searching cache..." << endl;
         int key = hashFunction(code + name, size);
         for (City city : table[key])
         {
@@ -94,35 +93,19 @@ public:
                 cout << "Country code: " << city.countryCode << endl;
                 cout << "City Name   : " << city.cityName << endl;
                 cout << "Population  : " << city.population << endl;
+                cout << endl;
 
                 return true;
             }
         }
 
-        cout << "City " << name << " not found in hash table." << endl;
+        cout << "City " << name << " not found in cache." << endl;
         cout << endl;
         return false;
     }
-
-    void display() const
-    {
-        cout << "Displaying all cities:" << endl;
-        for (int i = 0; i < size; ++i)
-        {
-            if (!table[i].empty())
-            {
-                cout << "Bucket " << i << ": " << endl;
-                for (const City& city : table[i])
-                {
-                    city.displayPrivate();
-                }
-            }
-        }
-
-        return;
-    }
 };
 
+// Exact copy of CSVReader from Midterm Project
 class CSVReader {
 public:
     static vector<vector<string>> readCSV(const string& filename) {
@@ -152,8 +135,7 @@ public:
 int main()
 {
     bool running = true;
-    char keepRunning = 'y';
-    char doMore = ' ';
+    char keepRunning = 'y'; // Effectively an input alias for bool running
     string searchCountry = "";
     string searchCity = "";
     CSVReader fileReading;
@@ -163,18 +145,20 @@ int main()
     while (running)
     {
         cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
-        cout << hashTable.itemCount << endl;
         cout << "Enter a country code (lowercase):" << endl;
         cin >> searchCountry;
         cout << "Enter a city name (lowercase):" << endl;
         std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
         cout << endl;
 
+        // Cache search first
         bool foundInCache = false;
-        foundInCache = hashTable.find(searchCountry, searchCity);
+        foundInCache = hashTable.find(searchCountry, searchCity); // foundInCache search truthiness determined by search itself
 
+        // Then search database if cache search unsuccessful
         if (!foundInCache)
         {
+            cout << "Searching database..." << endl;
             bool foundInFile = false;
             for (vector<string> item : fileReading.readCSV("world_cities.csv"))
             {
@@ -195,18 +179,17 @@ int main()
 
                     hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
 
-
                     break;
                 }
             }
+            // Then be sad if database search unsuccessful
             if (!foundInFile)
             {
-                cout << "City not found." << endl;
+                cout << "City not found." << endl; // :(
             }
         }
 
-        hashTable.display();
-
+        // User prompt for continued operation
         cout << "Would you like to do more? (y/n)" << endl;
         cin >> keepRunning;
         if (keepRunning == 'n')
