@@ -9,13 +9,15 @@ struct City
     string countryCode;
     string cityName;
     string population;
-    City(string val1, string val2, string val3) : countryCode(val1), cityName(val2), population(val3) {}
+    int id;
+    City(string val1, string val2, string val3, int val4) : countryCode(val1), cityName(val2), population(val3), id(val4) {}
 
     void displayPrivate() const
     {
         cout << countryCode << endl;
         cout << cityName << endl;
         cout << population << endl;
+        cout << id << endl;
     }
 };
 
@@ -35,6 +37,7 @@ private:
     }
 
 public:
+    int itemCount = 0;
 
     CityHashTable(int size = 10) : size(size)
     {
@@ -47,29 +50,36 @@ public:
 
         table[key].push_back(city);
 
+        itemCount++;
+
         cout << "Item successfully added to hash table" << endl;
         cout << endl;
 
         return;
     }
 
-    //void deleteByName(const string& name)
-    //{
-    //    int key = hashFunction(city.countryCode + city.cityName, size);
-    //    auto& bucket = table[key];
-
-    //    for (auto it = bucket.begin(); it != bucket.end(); ++it)
-    //    {
-    //        if (it->cityName == cityName)
-    //        {
-    //            bucket.erase(it);
-    //            return;
-    //        }
-    //    }
-
-    //    cout << "City " << name << " not found in hash table." << endl;
-    //    return;
-    //}
+    void deleteOldest()
+    {
+        for (vector<City> bucket : table)
+        {
+            for (City city : bucket)
+            {
+                city.id--;
+            }
+        }
+        for (vector<City> bucket : table)
+        {
+            for (auto it = bucket.begin(); it != bucket.end(); ++it)
+            {
+                if (it->id == 0)
+                {
+                    bucket.erase(it);
+                }
+            }
+        }
+        itemCount--;
+        return;
+    }
 
     bool find(const string& code, const string& name)
     {
@@ -105,8 +115,6 @@ public:
                     city.displayPrivate();
                 }
             }
-
-            cout << endl;
         }
 
         return;
@@ -153,6 +161,7 @@ int main()
     while (running)
     {
         cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
+        cout << hashTable.itemCount << endl;
         cout << "Enter a country code (lowercase):" << endl;
         cin >> searchCountry;
         cout << "Enter a city name (lowercase):" << endl;
@@ -176,7 +185,13 @@ int main()
                     cout << "Population  : " << item[2] << endl;
                     cout << endl;
 
-                    hashTable.insert(City(item[0], item[1], item[2]));
+                    if (hashTable.itemCount == 10)
+                    {
+                        cout << "Cache full! Deleting oldest...";
+                        hashTable.deleteOldest();
+                    }
+
+                    hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
                     break;
                 }
             }
