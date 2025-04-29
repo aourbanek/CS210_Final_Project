@@ -189,8 +189,21 @@ int main()
 
                     if (hashTable.itemCount == 10)
                     {
-                        cout << "Cache full! Deleting oldest..." << endl;
-                        hashTable.deleteOldest();
+                        switch (deletionMethod)
+                        {
+                        case 1:
+                            cout << "Cache full! Deleting least used..." << endl;
+                            hashTable.deleteLFU();
+                            break;
+                        case 2:
+                            cout << "Cache full! Deleting oldest..." << endl;
+                            hashTable.deleteOldest();
+                            break;
+                        case 3:
+                            cout << "Cache full! Deleting random..." << endl;
+                            hashTable.deleteRandom();
+                            break;
+                        }
                     }
 
                     hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
