@@ -86,7 +86,6 @@ public:
         int min_access = std::numeric_limits<int>::max();
 
         City leastUsed = City(NULL, NULL, NULL, NULL, NULL);
-        int deletedID = NULL;
 
         for (vector<City>& bucket : table)
         {
@@ -110,21 +109,9 @@ public:
             {
                 if (it->countryCode == leastUsed.countryCode && it->cityName == leastUsed.cityName)
                 {
-                    deletedID = it->id;
                     bucket.erase(it);
                     cout << "Least used item in cache deleted." << endl;
                     break;
-                }
-            }
-        }
-
-        for (vector<City>& bucket : table)
-        {
-            for (City& city : bucket)
-            {
-                if (city.id > deletedID)
-                {
-                    city.id--;
                 }
             }
         }
