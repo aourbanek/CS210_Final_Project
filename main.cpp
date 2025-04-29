@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <limits>
 using namespace std;
 
 struct City
@@ -9,8 +10,9 @@ struct City
     string countryCode;
     string cityName;
     string population;
-    int id; // Used for "age" in cache
-    City(string val1, string val2, string val3, int val4) : countryCode(val1), cityName(val2), population(val3), id(val4) {}
+    int id; // Used for FIFO in cache
+    int used; // Used for LFU deletion in cache
+    City(string val1, string val2, string val3, int val4, int val5) : countryCode(val1), cityName(val2), population(val3), id(val4), used(val5) {}
 };
 
 class CityHashTable
@@ -79,20 +81,71 @@ public:
         return;
     }
 
+    void deleteLFU()
+    {
+        int min_access = std::numeric_limits<int>::max();
+
+        City leastUsed = City(NULL, NULL, NULL, NULL, NULL);
+        int deletedID = NULL;
+
+        for (vector<City>& bucket : table)
+        {
+            for (auto it = bucket.begin(); it != bucket.end(); ++it)
+            {
+                if (it->used < min_access)
+                {
+                    min_access = it->used;
+                    leastUsed.countryCode = it->countryCode;
+                    leastUsed.cityName = it->cityName;
+                    leastUsed.population = it->population;
+                    leastUsed.id = it->id;
+                    leastUsed.used = it->used;
+                }
+            }
+        }
+
+        for (vector<City>& bucket : table)
+        {
+            for (auto it = bucket.begin(); it != bucket.end(); ++it)
+            {
+                if (it->countryCode == leastUsed.countryCode && it->cityName == leastUsed.cityName)
+                {
+                    deletedID = it->id;
+                    bucket.erase(it);
+                    cout << "Least used item in cache deleted." << endl;
+                    break;
+                }
+            }
+        }
+
+        for (vector<City>& bucket : table)
+        {
+            for (City& city : bucket)
+            {
+                if (city.id > deletedID)
+                {
+                    city.id--;
+                }
+            }
+        }
+    }
+
     // Returns a bool so whether or not the database needs to
     // be searched can be determined directly from this search
     bool find(const string& code, const string& name)
     {
         cout << "Searching cache..." << endl;
         int key = hashFunction(code + name, size);
-        for (City city : table[key])
+        for (City& city : table[key])
         {
             if (city.countryCode == code && city.cityName == name)
             {
                 cout << "City found in cache!" << endl;
-                cout << "Country code: " << city.countryCode << endl;
-                cout << "City Name   : " << city.cityName << endl;
-                cout << "Population  : " << city.population << endl;
+                cout << "Country code  : " << city.countryCode << endl;
+                cout << "City Name     : " << city.cityName << endl;
+                cout << "Population    : " << city.population << endl;
+                city.used++;
+                cout << "Item use count: " << city.used << endl;
                 cout << endl;
 
                 return true;
@@ -206,7 +259,7 @@ int main()
                         }
                     }
 
-                    hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1));
+                    hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1, 0));
 
                     break;
                 }
