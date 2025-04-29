@@ -139,14 +139,30 @@ int main()
     string searchCountry = "";
     string searchCity = "";
     CSVReader fileReading;
+    int deletionMethod;
 
     CityHashTable hashTable(10); // 10 buckets
 
+    cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
+    cout << "Choose a deletion scheme:" << endl;
+    cout << "1. Least Frequently Used" << endl;
+    cout << "2. First In, First Out" << endl;
+    cout << "3. Random" << endl;
+    std::cin >> deletionMethod;
+    while (deletionMethod < 1 || deletionMethod > 3)
+    {
+        cout << "Invalid selection. Select again:" << endl;
+        cout << "1. Least Frequently Used" << endl;
+        cout << "2. First In, First Out" << endl;
+        cout << "3. Random" << endl;
+        std::cin >> deletionMethod;
+    }
+    cout << "Deletion scheme " << deletionMethod << " chosen." << endl;
+
     while (running)
     {
-        cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
         cout << "Enter a country code (lowercase):" << endl;
-        cin >> searchCountry;
+        std::cin >> searchCountry;
         cout << "Enter a city name (lowercase):" << endl;
         std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
         cout << endl;
