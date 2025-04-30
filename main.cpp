@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <limits>
+#include <random>
 using namespace std;
 
 struct City
@@ -115,6 +116,24 @@ public:
                 }
             }
         }
+    }
+
+    void deleteRandom()
+    {
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> distrib(1, 10);
+
+        int randomKey = distrib(gen);
+
+        while (table[randomKey].size() == 0)
+        {
+            randomKey = distrib(gen);
+        }
+
+        table[randomKey].erase(table[randomKey].begin());
+
+        cout << "Random item in cache deleted." << endl;
     }
 
     // Returns a bool so whether or not the database needs to
