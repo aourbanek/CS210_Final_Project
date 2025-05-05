@@ -4,6 +4,8 @@
 #include <vector>
 #include <limits>
 #include <random>
+#include <string>
+#include <unordered_map>
 using namespace std;
 
 struct City
@@ -161,6 +163,41 @@ public:
         cout << "City " << name << " not found in cache." << endl;
         cout << endl;
         return false;
+    }
+};
+
+struct TrieNode {
+    bool isEndOfWord;
+    unordered_map<char, TrieNode*> children;
+    TrieNode() : isEndOfWord(false) {}
+};
+
+class CityTrie {
+private:
+    TrieNode* root;
+public:
+    CityTrie() {
+        root = new TrieNode();
+    }
+    void insert(const string& name) {
+        TrieNode* node = root;
+        for (char c : name) {
+            c = tolower(c); // Case-insensitive
+            if (node->children.count(c) == 0)
+                node->children[c] = new TrieNode();
+            node = node->children[c];
+        }
+        node->isEndOfWord = true;
+    }
+    bool search(const string& name) {
+        TrieNode* node = root;
+        for (char c : name) {
+            c = tolower(c);
+            if (node->children.count(c) == 0)
+                return false;
+            node = node->children[c];
+        }
+        return node->isEndOfWord;
     }
 };
 
