@@ -169,17 +169,21 @@ public:
 struct TrieNode {
     bool isEndOfWord;
     unordered_map<char, TrieNode*> children;
+    int id = NULL;
     TrieNode() : isEndOfWord(false) {}
 };
 
 class CityTrie {
 private:
     TrieNode* root;
+    int next_id;
+    vector<int> populations;
 public:
     CityTrie() {
         root = new TrieNode();
+        next_id = 0;
     }
-    void insert(const string& name) {
+    void insert(const string& name, const int& value) {
         TrieNode* node = root;
         for (char c : name) {
             c = tolower(c); // Case-insensitive
@@ -188,6 +192,8 @@ public:
             node = node->children[c];
         }
         node->isEndOfWord = true;
+        node->id = next_id++;
+        populations.push_back(value);
     }
     bool search(const string& name) {
         TrieNode* node = root;
