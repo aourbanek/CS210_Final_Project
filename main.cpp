@@ -289,46 +289,38 @@ int main()
         if (!foundInCache)
         {
             cout << "Searching trie..." << endl;
-            bool foundInTrie = false;
 
-            trie.search(searchCity, searchCountry);
-            //for (vector<string> item : fileReading.readCSV("world_cities.csv"))
-            //{
-            //    if (item[0] == searchCountry && item[1] == searchCity)
-            //    {
-            //        foundInTrie = true;
-            //        cout << "City found in database!" << endl;
-            //        cout << "Country code: " << item[0] << endl;
-            //        cout << "City Name   : " << item[1] << endl;
-            //        cout << "Population  : " << item[2] << endl;
-            //        cout << endl;
+            string foundPopulation = trie.search(searchCity, searchCountry);
 
-            //        if (hashTable.itemCount == 10)
-            //        {
-            //            switch (deletionMethod)
-            //            {
-            //            case 1:
-            //                cout << "Cache full! Deleting least used..." << endl;
-            //                hashTable.deleteLFU();
-            //                break;
-            //            case 2:
-            //                cout << "Cache full! Deleting oldest..." << endl;
-            //                hashTable.deleteOldest();
-            //                break;
-            //            case 3:
-            //                cout << "Cache full! Deleting random..." << endl;
-            //                hashTable.deleteRandom();
-            //                break;
-            //            }
-            //        }
+            if (foundPopulation != "NULL")
+            {
+                cout << "City found in database trie!" << endl;
+                cout << "Country code: " << searchCountry << endl;
+                cout << "City Name   : " << searchCity << endl;
+                cout << "Population  : " << foundPopulation << endl;
 
-            //        hashTable.insert(City(item[0], item[1], item[2], hashTable.itemCount + 1, 0));
+                if (hashTable.itemCount == 10)
+                {
+                    switch (deletionMethod)
+                    {
+                    case 1:
+                        cout << "Cache full! Deleting least used..." << endl;
+                        hashTable.deleteLFU();
+                        break;
+                    case 2:
+                        cout << "Cache full! Deleting oldest..." << endl;
+                        hashTable.deleteOldest();
+                        break;
+                    case 3:
+                        cout << "Cache full! Deleting random..." << endl;
+                        hashTable.deleteRandom();
+                        break;
+                    }
+                }
 
-            //        break;
-            //    }
-            //}
-            // Then be sad if database search unsuccessful
-            if (!foundInTrie)
+                hashTable.insert(City(searchCountry, searchCity, foundPopulation, hashTable.itemCount + 1, 0));
+            }
+            else // Then be sad if database TRIE search unsuccessful
             {
                 cout << "City not found." << endl; // :(
             }
