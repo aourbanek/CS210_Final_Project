@@ -196,6 +196,7 @@ public:
         for (char c : city) {
             c = tolower(c);
             if (node->children.count(c) == 0)
+                cout << "City not found." << endl;
                 return "NULL";
             node = node->children[c];
         }
@@ -204,6 +205,8 @@ public:
         {
             return node->cityPopulations[countryCode];
         }
+
+        cout << "City found without matching country code." << endl;
     }
 };
 
@@ -260,6 +263,14 @@ int main()
         std::cin >> deletionMethod;
     }
     cout << "Deletion scheme " << deletionMethod << " chosen." << endl;
+
+    CityTrie trie;
+    cout << "Loading databse into Trie..." << endl;
+    for (vector<string> item : fileReading.readCSV("world_cities.csv"))
+    {
+        trie.insert(item[1], item[0], item[2]);
+    }
+    cout << "Database fully loaded." << endl;
 
     while (running)
     {
