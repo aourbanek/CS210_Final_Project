@@ -169,41 +169,41 @@ public:
 struct TrieNode {
     bool isEndOfWord;
     unordered_map<char, TrieNode*> children;
-    int id = NULL;
+    unordered_map<string, string> cityPopulations;
     TrieNode() : isEndOfWord(false) {}
 };
 
 class CityTrie {
 private:
     TrieNode* root;
-    int next_id;
-    vector<int> populations;
 public:
     CityTrie() {
         root = new TrieNode();
-        next_id = 0;
     }
-    void insert(const string& name, const int& value) {
+    void insert(const string& city, const string& countryCode, const string& population) {
         TrieNode* node = root;
-        for (char c : name) {
+        for (char c : city) {
             c = tolower(c); // Case-insensitive
             if (node->children.count(c) == 0)
                 node->children[c] = new TrieNode();
             node = node->children[c];
         }
         node->isEndOfWord = true;
-        node->id = next_id++;
-        populations.push_back(value);
+        node->cityPopulations[countryCode] = population;
     }
-    bool search(const string& name) {
+    string search(const string& city, const string& countryCode) {
         TrieNode* node = root;
-        for (char c : name) {
+        for (char c : city) {
             c = tolower(c);
             if (node->children.count(c) == 0)
-                return false;
+                return "NULL";
             node = node->children[c];
         }
-        return node->isEndOfWord;
+
+        if (node->isEndOfWord && node->cityPopulations.count(countryCode))
+        {
+            return node->cityPopulations[countryCode];
+        }
     }
 };
 
