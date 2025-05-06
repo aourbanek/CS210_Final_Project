@@ -185,7 +185,9 @@ public:
         for (char c : city) {
             c = tolower(c); // Case-insensitive
             if (node->children.count(c) == 0)
+            {
                 node->children[c] = new TrieNode();
+            }
             node = node->children[c];
         }
         node->isEndOfWord = true;
@@ -196,8 +198,10 @@ public:
         for (char c : city) {
             c = tolower(c);
             if (node->children.count(c) == 0)
+            {
                 cout << "City not found." << endl;
                 return "NULL";
+            }
             node = node->children[c];
         }
 
