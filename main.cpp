@@ -88,7 +88,7 @@ public:
     {
         int min_access = std::numeric_limits<int>::max();
 
-        City leastUsed = City(NULL, NULL, NULL, NULL, NULL);
+        City leastUsed = City(" "," "," ",-1,-1);
 
         for (vector<City>& bucket : table)
         {
