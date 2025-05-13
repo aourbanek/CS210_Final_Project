@@ -34,5 +34,50 @@ int main() {
     }
     cout << "Deletion scheme " << deletionMethod << " chosen." << endl;
 
+    // Generate random indices for test
+    mt19937 rng(static_cast<unsigned int>(0));
+    uniform_int_distribution<int> dist(0, 299); // Upper bound < for loop stop condition should guarantee some cache hits
+
+    cout << "Starting test..." << endl;
+
+    for (int i = 1; i <= 500; ++i)
+    {
+        int index = dist(rng);
+        string searchCountry = cities[index][0];
+        string searchCity = cities[index][1];
+
+        cout << endl << "Test " << i << ": Searching for " << searchCity << ", " << searchCountry << endl;
+
+        bool foundInCache = hashTable.find(searchCountry, searchCity);
+
+        if (!foundInCache)
+        {
+            string foundPopulation = trie.search(searchCity, searchCountry);
+            if (foundPopulation != "NULL")
+            {
+                if (hashTable.itemCount == 10)
+                {
+                    switch (deletionMethod)
+                    {
+                    case 1:
+                        hashTable.deleteLFU();
+                        break;
+                    case 2:
+                        hashTable.deleteOldest();
+                        break;
+                    case 3:
+                        hashTable.deleteRandom();
+                        break;
+                    }
+                }
+                hashTable.insert(City(searchCountry, searchCity, foundPopulation, hashTable.itemCount + 1, 0));
+            }
+            else {
+                cout << "City not found." << endl;
+            }
+        }
+    }
+
+    cout << endl << "Test completed." << endl;
     return 0;
 }
