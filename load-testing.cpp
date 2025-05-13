@@ -4,6 +4,7 @@
 #include <random>
 #include <algorithm>
 #include "main.cpp"
+#include <chrono>
 using namespace std;
 
 int main() {
@@ -46,7 +47,9 @@ int main() {
         string searchCountry = cities[index][0];
         string searchCity = cities[index][1];
 
-        cout << endl << "Test " << i << ": Searching for " << searchCity << ", " << searchCountry << endl;
+        cout << "Test " << i << ": Searching for " << searchCity << ", " << searchCountry << endl;
+
+        auto startSearch = chrono::high_resolution_clock::now();
 
         bool foundInCache = hashTable.find(searchCountry, searchCity);
 
@@ -76,6 +79,19 @@ int main() {
                 cout << "City not found." << endl;
             }
         }
+
+        auto endSearch = chrono::high_resolution_clock::now();
+        auto timeSearch = chrono::duration<double, micro>(endSearch - startSearch).count();
+        cout << timeSearch << "us";
+        if (foundInCache)
+        {
+            cout << ",hit";
+        }
+        else
+        {
+            cout << ",miss";
+        }
+        cout << endl;
     }
 
     cout << endl << "Test completed." << endl;
