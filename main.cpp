@@ -125,7 +125,7 @@ public:
     void deleteRandom()
     {
         mt19937 gen(static_cast<unsigned int>(0));
-        uniform_int_distribution<> distrib(1, 10);
+        uniform_int_distribution<> distrib(0, 9);
 
         int randomKey = distrib(gen);
 
