@@ -242,103 +242,103 @@ public:
     }
 };
 
-int main()
-{
-    bool running = true;
-    char keepRunning = 'y'; // Effectively an input alias for bool running
-    string searchCountry = "";
-    string searchCity = "";
-    CSVReader fileReading;
-    int deletionMethod;
-
-    CityHashTable hashTable(10); // 10 buckets
-
-    cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
-    cout << "Choose a deletion scheme:" << endl;
-    cout << "1. Least Frequently Used" << endl;
-    cout << "2. First In, First Out" << endl;
-    cout << "3. Random" << endl;
-    std::cin >> deletionMethod;
-    while (deletionMethod < 1 || deletionMethod > 3)
-    {
-        cout << "Invalid selection. Select again:" << endl;
-        cout << "1. Least Frequently Used" << endl;
-        cout << "2. First In, First Out" << endl;
-        cout << "3. Random" << endl;
-        std::cin >> deletionMethod;
-    }
-    cout << "Deletion scheme " << deletionMethod << " chosen." << endl;
-
-    CityTrie trie;
-    cout << "Loading databse into Trie..." << endl;
-    for (vector<string> item : fileReading.readCSV("world_cities.csv"))
-    {
-        trie.insert(item[1], item[0], item[2]);
-    }
-    cout << "Database fully loaded." << endl;
-
-    while (running)
-    {
-        cout << "Enter a country code (lowercase):" << endl;
-        std::cin >> searchCountry;
-        cout << "Enter a city name (lowercase):" << endl;
-        std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
-        cout << endl;
-
-        // Cache search first
-        bool foundInCache = false;
-        foundInCache = hashTable.find(searchCountry, searchCity); // foundInCache search truthiness determined by search itself
-
-        // Then search TRIE if cache search unsuccessful
-        if (!foundInCache)
-        {
-            cout << "Searching trie..." << endl;
-
-            string foundPopulation = trie.search(searchCity, searchCountry);
-
-            if (foundPopulation != "NULL")
-            {
-                cout << "City found in database trie!" << endl;
-                cout << "Country code: " << searchCountry << endl;
-                cout << "City Name   : " << searchCity << endl;
-                cout << "Population  : " << foundPopulation << endl;
-
-                if (hashTable.itemCount == 10)
-                {
-                    switch (deletionMethod)
-                    {
-                    case 1:
-                        cout << "Cache full! Deleting least used..." << endl;
-                        hashTable.deleteLFU();
-                        break;
-                    case 2:
-                        cout << "Cache full! Deleting oldest..." << endl;
-                        hashTable.deleteOldest();
-                        break;
-                    case 3:
-                        cout << "Cache full! Deleting random..." << endl;
-                        hashTable.deleteRandom();
-                        break;
-                    }
-                }
-
-                hashTable.insert(City(searchCountry, searchCity, foundPopulation, hashTable.itemCount + 1, 0));
-            }
-            else // Then be sad if database TRIE search unsuccessful
-            {
-                cout << "City not found." << endl; // :(
-            }
-        }
-
-        // User prompt for continued operation
-        cout << "Would you like to do more? (y/n)" << endl;
-        cin >> keepRunning;
-        if (keepRunning == 'n')
-        {
-            cout << "Ok. Goodbye!";
-            running = false;
-        }
-    }
-
-    return 0;
-}
+//int main()
+//{
+//    bool running = true;
+//    char keepRunning = 'y'; // Effectively an input alias for bool running
+//    string searchCountry = "";
+//    string searchCity = "";
+//    CSVReader fileReading;
+//    int deletionMethod;
+//
+//    CityHashTable hashTable(10); // 10 buckets
+//
+//    cout << "CS 210 CITY SEARCH (MILESTONE 1)" << endl;
+//    cout << "Choose a deletion scheme:" << endl;
+//    cout << "1. Least Frequently Used" << endl;
+//    cout << "2. First In, First Out" << endl;
+//    cout << "3. Random" << endl;
+//    std::cin >> deletionMethod;
+//    while (deletionMethod < 1 || deletionMethod > 3)
+//    {
+//        cout << "Invalid selection. Select again:" << endl;
+//        cout << "1. Least Frequently Used" << endl;
+//        cout << "2. First In, First Out" << endl;
+//        cout << "3. Random" << endl;
+//        std::cin >> deletionMethod;
+//    }
+//    cout << "Deletion scheme " << deletionMethod << " chosen." << endl;
+//
+//    CityTrie trie;
+//    cout << "Loading databse into Trie..." << endl;
+//    for (vector<string> item : fileReading.readCSV("world_cities.csv"))
+//    {
+//        trie.insert(item[1], item[0], item[2]);
+//    }
+//    cout << "Database fully loaded." << endl;
+//
+//    while (running)
+//    {
+//        cout << "Enter a country code (lowercase):" << endl;
+//        std::cin >> searchCountry;
+//        cout << "Enter a city name (lowercase):" << endl;
+//        std::getline(std::cin >> std::ws, searchCity); // Same whitespace fix as midterm project
+//        cout << endl;
+//
+//        // Cache search first
+//        bool foundInCache = false;
+//        foundInCache = hashTable.find(searchCountry, searchCity); // foundInCache search truthiness determined by search itself
+//
+//        // Then search TRIE if cache search unsuccessful
+//        if (!foundInCache)
+//        {
+//            cout << "Searching trie..." << endl;
+//
+//            string foundPopulation = trie.search(searchCity, searchCountry);
+//
+//            if (foundPopulation != "NULL")
+//            {
+//                cout << "City found in database trie!" << endl;
+//                cout << "Country code: " << searchCountry << endl;
+//                cout << "City Name   : " << searchCity << endl;
+//                cout << "Population  : " << foundPopulation << endl;
+//
+//                if (hashTable.itemCount == 10)
+//                {
+//                    switch (deletionMethod)
+//                    {
+//                    case 1:
+//                        cout << "Cache full! Deleting least used..." << endl;
+//                        hashTable.deleteLFU();
+//                        break;
+//                    case 2:
+//                        cout << "Cache full! Deleting oldest..." << endl;
+//                        hashTable.deleteOldest();
+//                        break;
+//                    case 3:
+//                        cout << "Cache full! Deleting random..." << endl;
+//                        hashTable.deleteRandom();
+//                        break;
+//                    }
+//                }
+//
+//                hashTable.insert(City(searchCountry, searchCity, foundPopulation, hashTable.itemCount + 1, 0));
+//            }
+//            else // Then be sad if database TRIE search unsuccessful
+//            {
+//                cout << "City not found." << endl; // :(
+//            }
+//        }
+//
+//        // User prompt for continued operation
+//        cout << "Would you like to do more? (y/n)" << endl;
+//        cin >> keepRunning;
+//        if (keepRunning == 'n')
+//        {
+//            cout << "Ok. Goodbye!";
+//            running = false;
+//        }
+//    }
+//
+//    return 0;
+//}
