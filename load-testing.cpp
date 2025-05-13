@@ -47,7 +47,8 @@ int main() {
         string searchCountry = cities[index][0];
         string searchCity = cities[index][1];
 
-        cout << "Test " << i << ": Searching for " << searchCity << ", " << searchCountry << endl;
+        // Commented out for easier timing data extraction
+        //cout << "Test " << i << ": Searching for " << searchCity << ", " << searchCountry << endl;
 
         auto startSearch = chrono::high_resolution_clock::now();
 

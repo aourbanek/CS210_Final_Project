@@ -51,8 +51,9 @@ public:
 
         itemCount++;
 
-        cout << "City added to search cache." << endl;
-        cout << endl;
+        // Commented out for easier timing data extraction in load-testing.cpp
+        //cout << "City added to search cache." << endl;
+        //cout << endl;
 
         return;
     }
@@ -75,7 +76,8 @@ public:
                 if (it->id == 0)
                 {
                     bucket.erase(it);
-                    cout << "Oldest item in cache deleted." << endl;
+                    // Commented out for easier timing data extraction in load-testing.cpp
+                    //cout << "Oldest item in cache deleted." << endl;
                     break;
                 }
             }
@@ -113,7 +115,8 @@ public:
                 if (it->countryCode == leastUsed.countryCode && it->cityName == leastUsed.cityName)
                 {
                     bucket.erase(it);
-                    cout << "Least used item in cache deleted." << endl;
+                    // Commented out for easier timing data extraction in load-testing.cpp
+                    //cout << "Least used item in cache deleted." << endl;
                     break;
                 }
             }
@@ -136,7 +139,8 @@ public:
 
         table[randomKey].erase(table[randomKey].begin());
 
-        cout << "Random item in cache deleted." << endl;
+        // Commented out for easier timing data extraction in load-testing.cpp
+        //cout << "Random item in cache deleted." << endl;
 
         itemCount--;
         return;
@@ -146,26 +150,29 @@ public:
     // be searched can be determined directly from this search
     bool find(const string& code, const string& name)
     {
-        cout << "Searching cache..." << endl;
+        // Commented out for easier timing data extraction in load-testing.cpp
+        //cout << "Searching cache..." << endl;
         int key = hashFunction(code + name, size);
         for (City& city : table[key])
         {
             if (city.countryCode == code && city.cityName == name)
             {
-                cout << "City found in cache!" << endl;
-                cout << "Country code  : " << city.countryCode << endl;
-                cout << "City Name     : " << city.cityName << endl;
-                cout << "Population    : " << city.population << endl;
+                // Commented out for easier timing data extraction in load-testing.cpp
+                //cout << "City found in cache!" << endl;
+                //cout << "Country code  : " << city.countryCode << endl;
+                //cout << "City Name     : " << city.cityName << endl;
+                //cout << "Population    : " << city.population << endl;
                 city.used++;
-                cout << "Item use count: " << city.used << endl;
-                cout << endl;
+                //cout << "Item use count: " << city.used << endl;
+                //cout << endl;
 
                 return true;
             }
         }
 
-        cout << "City " << name << " not found in cache." << endl;
-        cout << endl;
+        // Commented out for easier timing data extraction in load-testing.cpp
+        //cout << "City " << name << " not found in cache." << endl;
+        //cout << endl;
         return false;
     }
 };
