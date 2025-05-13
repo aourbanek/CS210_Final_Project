@@ -88,7 +88,7 @@ public:
     {
         int min_access = std::numeric_limits<int>::max();
 
-        City leastUsed = City(" "," "," ",-1,-1);
+        City leastUsed = City(" ", " ", " ", -1, -1);
 
         for (vector<City>& bucket : table)
         {
@@ -124,8 +124,7 @@ public:
 
     void deleteRandom()
     {
-        random_device rd;
-        mt19937 gen(rd());
+        mt19937 gen(static_cast<unsigned int>(0));
         uniform_int_distribution<> distrib(1, 10);
 
         int randomKey = distrib(gen);
