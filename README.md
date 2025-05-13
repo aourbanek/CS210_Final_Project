@@ -9,3 +9,5 @@ Writing a program that reads city country, name, and population data from a give
 Updating the program to allow for multiple methods of deletion from the cache when it is full (10 items): Least Frequency Used, FIFO, and Random.
 ### Milestone 3
 Implementing a trie to load the database into on startup and searching that instead when the cache misses. (MUCH faster than re-searching the original database)
+### Milestone 4
+Using a separate automated script to test performance for each of the 3 cache deletion strategies.
