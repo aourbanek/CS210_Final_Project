@@ -118,6 +118,8 @@ public:
                 }
             }
         }
+        itemCount--;
+        return;
     }
 
     void deleteRandom()
@@ -136,6 +138,9 @@ public:
         table[randomKey].erase(table[randomKey].begin());
 
         cout << "Random item in cache deleted." << endl;
+
+        itemCount--;
+        return;
     }
 
     // Returns a bool so whether or not the database needs to
